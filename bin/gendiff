@@ -10,6 +10,27 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
-use function GenerateDiff\Gendiff\run;
+use function GenerateDiff\Gendiff\genDiff;
 
-run();
+$doc = <<<DOC
+Generate diff
+
+Usage:
+  gendiff (-h|--help)
+  gendiff (-v|--version)
+  gendiff [--format <fmt>] <firstFile> <secondFile>
+
+Options:
+  -h --help                     Show this screen
+  -v --version                  Show version
+  --format <fmt>                Report format [default: stylish]
+
+DOC;
+
+$params = [
+    'version'=>'Generate Diff 1.0'
+  ];
+
+$args = Docopt::handle($doc, $params);
+
+genDiff($args['<firstFile>'], $args['<secondFile>']);

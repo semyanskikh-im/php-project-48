@@ -8,7 +8,7 @@
         },
         "files": [
             "src/Gendiff.php",
-            "src/Parser.php"
+            "src/Functions.php"
         ]
     },
     "authors": [

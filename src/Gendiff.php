@@ -2,45 +2,24 @@
 
 Namespace GenerateDiff\Gendiff;
 
-use Docopt;
-use function GenerateDiff\Parser\parse;
 
-function run()
+use function GenerateDiff\Functions\parse;
+use function GenerateDiff\Functions\sortArrayKeys;
+use function Functional\sort;
+
+   
+function genDiff($filename1, $filename2)
 {
-    $doc = <<<DOC
-    Generate diff
+  $firstFilePath = __DIR__ . "/../files/{$filename1}"; // путь до первого файла
+  $secondFilePath = __DIR__ . "/../files/{$filename2}"; // путь до второго файла
 
-    Usage:
-      gendiff (-h|--help)
-      gendiff (-v|--version)
-      gendiff [--format <fmt>] <firstFile> <secondFile>
-
-    Options:
-      -h --help                     Show this screen
-      -v --version                  Show version
-      --format <fmt>                Report format [default: stylish]
-
-    DOC;
-
-    $params = [
-        'version'=>'Generate Diff 1.0'
-      ];
-
-    $args = Docopt::handle($doc, $params);
-
-    if (isset($args['<firstFile>']) && isset($args['<secondFile>'])) { //если заданы названия обоих файлов, то...
-
-      $firstFilePath = __DIR__ . "/../files/{$args['<firstFile>']}"; // путь до первого файла
-      $secondFilePath = __DIR__ . "/../files/{$args['<secondFile>']}"; // путь до второго файла
-
-      echo $firstFilePath . PHP_EOL;
-      echo $secondFilePath . PHP_EOL;
+  echo $firstFilePath . PHP_EOL;
+  echo $secondFilePath . PHP_EOL;
       
-      $firstParserResult = parse($firstFilePath);
-      $secondParserResult = parse($secondFilePath);
+  $firstParserResult = sortArrayKeys(parse($firstFilePath), fn ($left, $right) => strcmp($left, $right), true); //содержимое парсинга первого файла
+  $secondParserResult = sortArrayKeys(parse($secondFilePath), fn ($left, $right) => strcmp($left, $right), true); //содержиоме парсинга второго файла
 
-    print_r($firstParserResult) . PHP_EOL;
-    print_r($secondParserResult) . PHP_EOL;
-    }
-
-  }
+  var_export($firstParserResult) . PHP_EOL;
+  var_export($secondParserResult) . PHP_EOL;
+    
+}
