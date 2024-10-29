@@ -3,9 +3,6 @@
     "description": "Hexlet second project",
     "license": "MIT",
     "autoload": {
-        "psr-4": {
-            "Hexlet\\Code\\": "src/"
-        },
         "files": [
             "src/Gendiff.php",
             "src/Functions.php"
