@@ -5,7 +5,7 @@ namespace GenerateDiff\Parsers;
 use Symfony\Component\Yaml\Yaml;
 
 /*
- * функция проверяет существует ли файл, не пустой ли он, 
+ * функция проверяет существует ли файл, не пустой ли он,
  * парсит содержиоме json или yaml файла и декодирует строку
  */
 function parse($path)
