@@ -43,7 +43,8 @@ function genDiff($filename1, $filename2)
 
     //сортируем массив различий, чтобы значения по ключу 'key' были в алфавитном порядке:
     $sortedDifference = sort(
-        $difference, function ($a, $b) {
+        $difference,
+        function ($a, $b) {
             return strcmp($a['key'], $b['key']);
         }
     );
@@ -52,7 +53,8 @@ function genDiff($filename1, $filename2)
     $stringDifference = array_map(
         function ($line) {
             return "  {$line['sign']} {$line['key']}: {$line['value']}\n";
-        }, $sortedDifference
+        },
+        $sortedDifference
     );
 
     $stringDifference = implode($stringDifference);// преобразуем массив в строку
@@ -61,5 +63,4 @@ function genDiff($filename1, $filename2)
 
     echo($finalView);
     return $finalView;
-
 }
