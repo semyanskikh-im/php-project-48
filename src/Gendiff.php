@@ -2,8 +2,8 @@
 
 namespace GenerateDiff\Gendiff;
 
-use function GenerateDiff\Functions\parse;
-use function GenerateDiff\Functions\valueToString;
+use function GenerateDiff\Parsers\parse;
+use function GenerateDiff\Functions\setValueToString;
 use function Functional\sort;
 
 function genDiff($filename1, $filename2)
@@ -15,7 +15,7 @@ function genDiff($filename1, $filename2)
     //echo $secondFilePath . PHP_EOL;
 
     $firstParserResult = parse($firstFilePath); //данные парсинга первого файла
-    $secondParserResult = parse($secondFilePath);//данные паринга второго файла
+    $secondParserResult = parse($secondFilePath);//данные парcинга второго файла
 
     //var_export($firstParserResult) . PHP_EOL;
     //var_export($secondParserResult) . PHP_EOL;
@@ -24,20 +24,20 @@ function genDiff($filename1, $filename2)
     foreach ($firstParserResult as $k => $v) {
         if (array_key_exists($k, $secondParserResult)) {//если ключ есть в обоих массивах, то 2 варианта:
             if ($firstParserResult[$k] === $secondParserResult[$k]) {// 1. если зачение в обоих массивах одинаковое
-                $difference[] = ['sign' => ' ', 'key' => $k, 'value' => valueToString($v)];
+                $difference[] = ['sign' => ' ', 'key' => $k, 'value' => setValueToString($v)];
             } else {// 2. если значение изменилось
-                $difference[] = ['sign' => '-', 'key' => $k, 'value' => valueToString($v)];
-                $difference[] = ['sign' => '+', 'key' => $k, 'value' => valueToString($secondParserResult[$k])];
+                $difference[] = ['sign' => '-', 'key' => $k, 'value' => setValueToString($v)];
+                $difference[] = ['sign' => '+', 'key' => $k, 'value' => setValueToString($secondParserResult[$k])];
             }
         } else {//если ключ есть только в первом массиве
-            $difference[] = ['sign' => '-', 'key' => $k, 'value' => valueToString($v)];
+            $difference[] = ['sign' => '-', 'key' => $k, 'value' => setValueToString($v)];
         }
     }
 
     //проходим по данным второго массива:
     foreach ($secondParserResult as $k => $v) {
         if (!array_key_exists($k, $firstParserResult)) {//если ключ-значение есть только во втором массиве
-             $difference[] = ['sign' => '+', 'key' => $k, 'value' => valueToString($v)];
+             $difference[] = ['sign' => '+', 'key' => $k, 'value' => setValueToString($v)];
         }
     }
 
@@ -59,7 +59,7 @@ function genDiff($filename1, $filename2)
 
     $stringDifference = implode($stringDifference);// преобразуем массив в строку
 
-    $finalView = "{\n{$stringDifference}}\n";//финальный вид вывода различия json-файлов
+    $finalView = "{\n{$stringDifference}}\n";//финальный вид вывода различия двух файлов
 
     echo($finalView);
     return $finalView;
