@@ -11,6 +11,7 @@ class genDiffTest extends TestCase
     {
         $filename1 = '/tests/fixtures/testFile1.json';
         $filename2 = '/tests/fixtures/testFile2.json';
+        $filename3 = '/tests/fixtures/testFile3.json';
 
         $expected = <<<ROF
         {
@@ -28,6 +29,8 @@ class genDiffTest extends TestCase
         ROF;
 
         $this->assertEquals($expected, genDiff($filename1, $filename2));
+
+        
 
     }
 }

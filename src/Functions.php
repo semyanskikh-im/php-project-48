@@ -7,20 +7,19 @@ use function Functional\sort;
 /*
  * функция парсит содержиоме json-файла и декодирует строку JSON
  */
-function parse($path) 
+function parse($path)
 {
     if (!is_file($path)) {
         throw new \Exception('Oops! No file!'); // если это не файл - выводим сообщение
     }
 
     $fileContent = file_get_contents($path); // получаем содержимое файла по введенному пути
-    
+
     if (empty($fileContent)) {
         throw new \Exception("Oops! File {$path} is empty!"); // если файл пустой  - выводим сообщение
     }
-    
-    return json_decode($fileContent, true); // декодируем из json в асс. массив
 
+    return json_decode($fileContent, true); // декодируем из json в асс. массив
 }
 
 /*
