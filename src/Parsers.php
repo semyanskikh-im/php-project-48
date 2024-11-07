@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 function parse($path)
 {
-    if (!is_file($path)) {
+    if (!file_exists($path)) {
         throw new \Exception('Oops! No file!'); // если это не файл - выводим сообщение
     }
 

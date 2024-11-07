@@ -1,0 +1,11 @@
+{
+  - follow: false
+  + homepage: null
+    host: hexlet.io
+  - proxy: 123.234.53.22
+  - timeout: 10
+  + timeout: 20
+  + verbose: true
+  - vpn: not use
+  + vpn: use
+}
