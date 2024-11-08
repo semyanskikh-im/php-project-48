@@ -1,6 +1,18 @@
 {
-    "host": "hexlet.io",
-    "timeout": 50,
-    "proxy": "123.234.53.22",
-    "follow": false
+    "group1": {
+      "baz": "bas",
+      "foo": "bar",
+      "nest": {
+        "key": "value"
+        }
+    },
+    "aloha": {
+      "raz": "raz"
+    },
+    "razr": "v2",
+    "smart": [
+      11,
+      22,
+      33
+    ]
 }

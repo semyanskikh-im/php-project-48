@@ -4,9 +4,11 @@
     "license": "MIT",
     "autoload": {
         "files": [
+            "src/Differ.php",
             "src/Gendiff.php",
             "src/Parsers.php",
             "src/Functions.php"
+            
         ]
     },
     "authors": [

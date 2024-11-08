@@ -1,5 +1,14 @@
 {
-    "timeout": 20,
-    "verbose": true,
-    "host": "hexlet.io"
+    "group1": {
+        "foo": "bar",
+        "baz": "bars",
+        "nest": "str"
+    },
+    "bubble gum": "love",
+    "razr": "v2",
+    "smart": [
+        11,
+        15,
+        30
+      ]
 }
