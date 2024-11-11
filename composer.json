@@ -5,6 +5,7 @@
     "autoload": {
         "files": [
             "src/Differ.php",
+            "src/Formatters/Stylish.php",
             "src/Gendiff.php",
             "src/Parsers.php",
             "src/Functions.php"
