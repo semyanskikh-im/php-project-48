@@ -30,10 +30,10 @@ function genDiff($filename1, $filename2)
 
     $diff = differ($firstParserResult, $secondParserResult);
 
-    // var_export($diff);
+    var_export($diff);
 
-    $final = formatStylish($diff);
-    var_export($final);
+    // $final = formatStylish($diff);
+    // var_export($final);
 
     // $jsonresult = json_encode($diff);
     // file_put_contents('result.json', $jsonresult);
