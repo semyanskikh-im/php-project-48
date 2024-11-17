@@ -1,11 +1,11 @@
 <?php
 
-namespace GenerateDiff\Tests;
+namespace Differ\Tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use function GenerateDiff\Gendiff\genDiff;
+use function Differ\Gendiff\genDiff;
 
 class GenDiffTest extends TestCase
 {

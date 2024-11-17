@@ -1,6 +1,6 @@
 <?php
 
-namespace GenerateDiff\Parsers;
+namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
