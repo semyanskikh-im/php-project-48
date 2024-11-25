@@ -22,7 +22,6 @@ function differ($array1, $array2, $depth = 1)
         //если ключ есть только в первом массиве
         if (array_key_exists($key, $array1) && (!array_key_exists($key, $array2))) {
             return [
-                'depth' => $depth,
                 'status' => 'removed',
                 'key' => $key,
                 'value' => $value1
@@ -32,7 +31,6 @@ function differ($array1, $array2, $depth = 1)
         //если ключ есть только во втором массиве
         if (!array_key_exists($key, $array1) && (array_key_exists($key, $array2))) {
             return [
-                'depth' => $depth,
                 'status' => 'added',
                 'key' => $key,
                 'value' => $value2
@@ -44,7 +42,6 @@ function differ($array1, $array2, $depth = 1)
         //1. значения одинаковы:
             if ($value1 === $value2) {
                 return [
-                    'depth' => $depth,
                     'status' => 'unchanged',
                     'key' => $key,
                     'value' => $value1
@@ -56,7 +53,6 @@ function differ($array1, $array2, $depth = 1)
             if ((!is_array($value1)) || (!is_array($value2))) {
 
                 return [
-                    'depth' => $depth,
                     'status' => 'updated',
                     'key' => $key,
                     'value1' => $value1, 
@@ -69,19 +65,19 @@ function differ($array1, $array2, $depth = 1)
                 // ... и оба ассоциативные, проверяем детей на уровень ниже
                 if (!array_is_list($value1) && !array_is_list($value2)) {
                         
-                    return ['depth' => $depth,
-                    'status' => 'have children',
-                    'key' => $key, 
-                    'value' => differ($value1, $value2, $depth + 1)
-                ];
+                    return [
+                        'status' => 'have children',
+                        'key' => $key, 
+                         'value' => differ($value1, $value2, $depth + 1)
+                    ];
                 } else {//в противном случае, возвращаем как есть
 
-                    return ['depth' => $depth, 
-                    'status' => 'updated', 
-                    'key' => $key, 
-                    'value1' => $value1, 
-                    'value2' => $value2
-                ];
+                    return [
+                        'status' => 'updated', 
+                        'key' => $key, 
+                        'value1' => $value1, 
+                        'value2' => $value2
+                    ];
                 }
             }
         }

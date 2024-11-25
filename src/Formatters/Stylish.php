@@ -2,16 +2,16 @@
 
 namespace Differ\Formatters\Stylish;
 
-function makeIndent($symbol, $depth)
+function makeIndent($depth = 1)
 {
-	$indent = $depth * 4 - 2;
-	if ($indent > 0) {
-		return str_repeat($symbol, $indent);
-	}
-	return '';
+	$step = 4;
+  $backStep = 2;
+  $indent = $depth * $step - $backStep;
+	return str_repeat('.', $indent);
+	
 }
 
-function stringifyIter($data, $symbol = '.', $depth = 1) 
+function stringify($data, $depth = 1) 
 {
   if (is_string($data)) {
     return $data;
@@ -23,71 +23,58 @@ function stringifyIter($data, $symbol = '.', $depth = 1)
     return 'null';
   } elseif (is_array($data)) {
   	foreach ($data as $key => $value) {
-  		if (is_array($value)) {
-  			$output[] = makeIndent($symbol, $depth) . stringifyIter($key) . ": {" . PHP_EOL . stringifyIter($value, $symbol, $depth + 1);
+  		if (is_array($value)) {//если значение - тоже массив, то проваливаемся на уровень ниже
+  			$output[] = makeIndent($depth) . stringify($key) . ": {" . PHP_EOL . stringify($value, $depth + 1);
   			
-  			$output[] = makeIndent($symbol, $depth) . "}";
+  			$output[] = makeIndent($depth) . "}";// закрываем текщий уровень скобкой
   			}
-  		if(!is_array($value)) {
-  			$output[] = makeIndent($symbol, $depth) . stringifyIter($key) . ": " . stringifyIter($value);
+  		if(!is_array($value)) {//если значение не массив, то просто формируем строку
+  			$output[] = PHP_EOL . makeIndent($depth + 1) . stringify($key) . ": " . stringify($value);
   		}	
-  	}
-  	   
-  	   return implode("\n", $output);
-  	   
-  }
+    } 
     
+    $result = implode("\n", $output);
+    return $result;
+  }
+
   $failure = getType($data);
   Throw new \Exception(sprintf('Unknown format %s is given!', $failure));
 }
 
 
-function formatStylish($diff)
+function formatStylish($diff, $depth = 1)
 {
-            $result = array_map(function($item) {
+            $result = array_map(function($item) use ($depth) {
 
                 $status = $item['status'];
-                $key = $item['key'];
+                $key = stringify($item['key']);
+                $indent = makeIndent($depth);
+
                 switch ($status) {
 
                 case 'added':
-                    $data = "+ {$key}: ";
-                    break;
+                    return $indent . "+ " . $key . ": " . stringify($item['value'], $depth);
+                    
                 case 'removed':
-                    $data = "- {$key}: ";
-                    break;
+                    return $indent . "- " . $key . ": " . stringify($item['value'], $depth);
+
                 case 'unchanged':
-                    $data = "  {$key}: ";
-                    break;
+                  return $indent . "  " . $key . ": " . stringify($item['value'], $depth);
+
                 case 'updated':
-                    $data1 = "- {$key}: ";
-                    $data2 = "+ {$key}: ";
-                    break;
+                  return $indent . "- " . $key . ": " . stringify($item['value1'], $depth) . PHP_EOL 
+                  . $indent . "+ " . $key . ": " . stringify($item['value2'], $depth);
+
+                case 'have children':
+                    return $indent . "  " . $key . ": {" . PHP_EOL . formatStylish($item['value'], $depth + 1) . PHP_EOL 
+                    . $indent . "}";
+                  
                 default:
                     throw new \Exception('Unknown status');   
                 }
-     
-        if (!$status = 'updated' && !is_array($item['value'])) {//если не построены дети
-            $lines = "{$indent}{$data}{$item['value']}\n";
-            return $lines;
-        }
-        if (!$status = 'updated' && is_array($item['value'])) {//если у значения есть дети
-        
-            $lines[] = "{$indent}{$data}{\n";
-            formatStylish($item['value']);
-            $lines[] = "{$indent}}\n";
-            return $lines;
+              }, $diff);
+          return implode("\n", $result);
             }
-        if ($status = 'updated') {
-            $lines[] = "{$indent}{$data1}{$item['value1']}\n";
-            $lines[] = "{$indent}{$data2}{$item['value2']}\n";
-            return $lines;
-        }
-        }, $diff);
-
-        $preView = implode($result);
-        $finalView = "{\n{$preView}}\n";
-
-    return $finalView;
-}
+     
+    
 
