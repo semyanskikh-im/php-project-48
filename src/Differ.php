@@ -68,7 +68,7 @@ function differ($array1, $array2, $depth = 1)
                     return [
                         'status' => 'have children',
                         'key' => $key, 
-                         'value' => differ($value1, $value2, $depth + 1)
+                        'value' => differ($value1, $value2, $depth + 1)
                     ];
                 } else {//в противном случае, возвращаем как есть
 

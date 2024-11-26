@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Stylish;
 
-function makeIndent($depth = 1)
+function makeSmallIndent($depth = 1)
 {
 	$step = 4;
   $backStep = 2;
@@ -11,7 +11,15 @@ function makeIndent($depth = 1)
 	
 }
 
-function stringify($data, $depth = 1) 
+function makeFullIndent($depth = 1)
+{
+	$step = 4;
+  $indent = $depth * $step;
+	return str_repeat('.', $indent);
+	
+}
+
+function stringifyIter($data, $depth = 1) 
 {
   if (is_string($data)) {
     return $data;
@@ -24,12 +32,11 @@ function stringify($data, $depth = 1)
   } elseif (is_array($data)) {
   	foreach ($data as $key => $value) {
   		if (is_array($value)) {//если значение - тоже массив, то проваливаемся на уровень ниже
-  			$output[] = makeIndent($depth) . stringify($key) . ": {" . PHP_EOL . stringify($value, $depth + 1);
-  			
-  			$output[] = makeIndent($depth) . "}";// закрываем текщий уровень скобкой
+  			$output[] = makeFullIndent($depth + 1) . stringifyIter($key) . ": {" . PHP_EOL . stringifyIter($value, $depth + 2) . 
+        PHP_EOL . makeFullIndent($depth + 1) . "}";// закрываем текщий уровень скобкой
   			}
   		if(!is_array($value)) {//если значение не массив, то просто формируем строку
-  			$output[] = PHP_EOL . makeIndent($depth + 1) . stringify($key) . ": " . stringify($value);
+  			$output[] = makeFullIndent($depth + 1) . stringifyIter($key) . ": " . stringifyIter($value);
   		}	
     } 
     
@@ -41,6 +48,15 @@ function stringify($data, $depth = 1)
   Throw new \Exception(sprintf('Unknown format %s is given!', $failure));
 }
 
+function stringify($data, $depth = 1)
+{
+	if(is_array($data)) {
+		return "{   \n" . stringifyIter($data) . PHP_EOL . makeFullIndent($depth) . "}";
+	}
+	
+	return stringifyIter($data);
+}
+
 
 function formatStylish($diff, $depth = 1)
 {
@@ -48,33 +64,42 @@ function formatStylish($diff, $depth = 1)
 
                 $status = $item['status'];
                 $key = stringify($item['key']);
-                $indent = makeIndent($depth);
+                $smallIndent = makeSmallIndent($depth);
+                $fullIndent = makeFullIndent($depth);
 
                 switch ($status) {
 
                 case 'added':
-                    return $indent . "+ " . $key . ": " . stringify($item['value'], $depth);
+                    return $smallIndent . "+ " . $key . ": " . stringify($item['value'], $depth);
                     
                 case 'removed':
-                    return $indent . "- " . $key . ": " . stringify($item['value'], $depth);
+                    return $smallIndent . "- " . $key . ": " . stringify($item['value'], $depth);
 
                 case 'unchanged':
-                  return $indent . "  " . $key . ": " . stringify($item['value'], $depth);
+                  return $fullIndent . $key . ": " . stringify($item['value'], $depth);
 
                 case 'updated':
-                  return $indent . "- " . $key . ": " . stringify($item['value1'], $depth) . PHP_EOL 
-                  . $indent . "+ " . $key . ": " . stringify($item['value2'], $depth);
+                  return $smallIndent . "- " . $key . ": " . stringify($item['value1'], $depth) . PHP_EOL 
+                  . $smallIndent . "+ " . $key . ": " . stringify($item['value2'], $depth);
 
                 case 'have children':
-                    return $indent . "  " . $key . ": {" . PHP_EOL . formatStylish($item['value'], $depth + 1) . PHP_EOL 
-                    . $indent . "}";
+                    return $fullIndent . $key . ": {" . PHP_EOL . formatStylish($item['value'], $depth + 1) . PHP_EOL 
+                    . $fullIndent . "}";
                   
                 default:
                     throw new \Exception('Unknown status');   
                 }
               }, $diff);
           return implode("\n", $result);
-            }
+
+          }
+
+function makeStylish($diff)
+{
+  $result = formatStylish($diff);
+  return "{\n{$result}\n}";
+}
+
      
     
 
