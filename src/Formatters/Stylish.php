@@ -32,11 +32,11 @@ function stringifyIter($data, $depth = 1)
   } elseif (is_array($data)) {
   	foreach ($data as $key => $value) {
   		if (is_array($value)) {//если значение - тоже массив, то проваливаемся на уровень ниже
-  			$output[] = makeFullIndent($depth + 1) . stringifyIter($key) . ": {" . PHP_EOL . stringifyIter($value, $depth + 1) . 
+  			$output[] = makeFullIndent($depth + 1) . stringifyIter($key) . ": {" . PHP_EOL . stringifyIter($value, $depth + 2) . 
         PHP_EOL . makeFullIndent($depth + 1) . "}";// закрываем текщий уровень скобкой
   			}
   		if(!is_array($value)) {//если значение не массив, то просто формируем строку
-  			$output[] = makeFullIndent($depth + 2) . stringifyIter($key) . ": " . stringifyIter($value);
+  			$output[] = makeFullIndent($depth + 1) . stringifyIter($key) . ": " . stringifyIter($value);
   		}	
     } 
     
