@@ -3,9 +3,8 @@
 namespace Differ\Differ;
 
 use function Functional\sort;
-use function Differ\Functions\formatData;
 
-function differ($array1, $array2, $depth = 1)
+function differ($array1, $array2)
 {
     $keys = array_unique(array_merge(array_keys($array1), array_keys($array2)));//получаем все ключи 2 массивов на одной глубине
 
@@ -13,10 +12,9 @@ function differ($array1, $array2, $depth = 1)
         function ($a, $b) {
             return strcmp($a, $b);
         });
+   
 
-    //print_r($sortedKeys);    
-
-    $result = array_map(function($key) use ($array1, $array2, $depth) {
+    $result = array_map(function($key) use ($array1, $array2) {
         $value1 = $array1[$key]  ?? NULL;
         $value2 = $array2[$key] ?? NULL;
         //если ключ есть только в первом массиве
@@ -68,7 +66,7 @@ function differ($array1, $array2, $depth = 1)
                     return [
                         'status' => 'have children',
                         'key' => $key, 
-                        'value' => differ($value1, $value2, $depth + 1)
+                        'children' => differ($value1, $value2)
                     ];
                 } else {//в противном случае, возвращаем как есть
 
@@ -85,4 +83,12 @@ function differ($array1, $array2, $depth = 1)
 
     return $result;
 
+}
+
+function makeDiff($array1, $array2)
+{
+    return [
+            'status' => 'root',
+            'children' => differ($array1, $array2)
+    ];
 }

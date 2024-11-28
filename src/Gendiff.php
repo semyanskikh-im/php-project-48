@@ -3,7 +3,7 @@
 namespace Differ\Gendiff;
 
 use function Differ\Parsers\parse;
-use function Differ\Differ\differ;
+use function Differ\Differ\makeDiff;
 use function Differ\Formatters\Stylish\makeStylish;
 use function Functional\sort;
 
@@ -22,10 +22,10 @@ function genDiff($filename1, $filename2)
     //var_export($secondParserResult) . PHP_EOL;
 
 
-    $diff = differ($firstParserResult, $secondParserResult);
+    $diff = makeDiff($firstParserResult, $secondParserResult);
     
 
-    //var_export($diff);
+    var_export($diff);
 
     $final = makeStylish($diff);
     print_r($final);
