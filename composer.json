@@ -7,6 +7,7 @@
             "src/Differ.php",
             "src/Formatter.php",
             "src/Formatters/Stylish.php",
+            "src/Formatters/Plain.php",
             "src/Gendiff.php",
             "src/Parsers.php"
             

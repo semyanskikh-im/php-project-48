@@ -52,7 +52,6 @@ function formatStylish(array $diff, $depth = 1)
                 },
                 $diff['children']
             );
-        //print_r($result);
             return implode("\n", $result);
 
         case 'added':

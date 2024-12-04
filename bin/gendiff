@@ -33,4 +33,6 @@ $params = [
 
 $args = Docopt::handle($doc, $params);
 
-genDiff($args['<firstFile>'], $args['<secondFile>'], $args['--format'] = 'stylish');
+$diff = genDiff($args['<firstFile>'], $args['<secondFile>'], $args['--format']);
+print_r($diff);
+

@@ -10,9 +10,8 @@ use function Differ\Gendiff\genDiff;
 class GenDiffTest extends TestCase
 {
     #[DataProvider('additionProvider')]
-    public function testGenDiff($a, $b, $expected)
+    public function testGenDiff($a, $b, $format, $expected)
     {
-        $format = 'stylish';
         $this->assertEquals($expected, genDiff($a, $b, $format));
     }
 
@@ -22,12 +21,18 @@ class GenDiffTest extends TestCase
         $filename2 = '/tests/fixtures/testFile2.json';
         $filename4 = '/tests/fixtures/testFile1.yml';
         $filename5 = '/tests/fixtures/testFile2.yaml';
-        $expected = file_get_contents('tests/fixtures/expected.txt');
+        $formatStylish = 'stylish';
+        $formatPlain = 'plain';
+        $expectedStylish = file_get_contents('tests/fixtures/stylishExpected.txt');
+        $expectedPlain = file_get_contents('tests/fixtures/plainExpected.txt');
 
         return [
-            [$filename1, $filename2, $expected],
-            [$filename4, $filename5, $expected],
-            [$filename1, $filename5, $expected]
+            'json to json. Format Stylish' => [$filename1, $filename2, $formatStylish, $expectedStylish],
+            'yml to yaml. Format Stylish' => [$filename4, $filename5, $formatStylish, $expectedStylish],
+            'json to yaml. Format Stylish' => [$filename1, $filename5, $formatStylish, $expectedStylish],
+            'json to json. Format Plain' => [$filename1, $filename2, $formatPlain, $expectedPlain],
+            'yml to yaml. Format Plain' => [$filename4, $filename5, $formatPlain, $expectedPlain],
+            'json to yaml. Format Plain' => [$filename1, $filename5, $formatPlain, $expectedPlain]
         ];
     }
 

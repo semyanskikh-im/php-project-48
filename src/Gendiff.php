@@ -4,11 +4,9 @@ namespace Differ\Gendiff;
 
 use function Differ\Parsers\parse;
 use function Differ\Differ\makeDiff;
-use function Differ\Formatters\Stylish\makeStylish;
 use function Differ\Formatter\formatter;
-use function Functional\sort;
 
-function genDiff($filename1, $filename2, $format)
+function genDiff($filename1, $filename2, $format = 'stylish')
 {
     $firstFilePath = __DIR__ . "/../{$filename1}"; // путь до первого файла
     $secondFilePath = __DIR__ . "/../{$filename2}"; // путь до второго файла
@@ -25,13 +23,7 @@ function genDiff($filename1, $filename2, $format)
 
     $diff = makeDiff($firstParserResult, $secondParserResult);
 
+    $result = formatter($diff, $format);
 
-    //print_r($diff);
-
-    $final = formatter($diff, $format);
-    print_r($final);
-    return $final;
-
-    // $jsonresult = json_encode($diff);
-    // file_put_contents('result.json', $jsonresult);
+    return $result;
 }
