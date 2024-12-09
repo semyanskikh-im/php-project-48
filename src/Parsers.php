@@ -6,12 +6,12 @@ use Symfony\Component\Yaml\Yaml;
 
 /*
  * функция проверяет существует ли файл, не пустой ли он,
- * парсит содержиоме json или yaml файла и декодирует строку
+ * парсит содержиоме json или yaml файла и декодирует строку в массив
  */
-function parse($path)
+function parse(string $path): array
 {
     if (!file_exists($path)) {
-        throw new \Exception('Oops! No file!'); // если это не файл - выводим сообщение
+        throw new \Exception("Oops! No file {$path}!"); // если такого файла не существует - выводим сообщение
     }
 
     $fileContent = file_get_contents($path); // получаем содержимое файла по введенному пути

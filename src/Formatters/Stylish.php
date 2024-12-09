@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Stylish;
 
-function makeIndent($depth)
+function makeIndent(int $depth): string
 {
     $step = 4;
     $backStep = 2;
@@ -10,7 +10,7 @@ function makeIndent($depth)
     return str_repeat(' ', $indent);
 }
 
-function stringify($data, $depth = 1)
+function stringify(mixed $data, int $depth = 1): string
 {
     if (is_string($data)) {
         return $data;
@@ -38,7 +38,7 @@ function stringify($data, $depth = 1)
     throw new \Exception(sprintf('Unknown format %s is given!', $failure));
 }
 
-function formatStylish(array $diff, $depth = 1)
+function formatStylish(array $diff, int $depth = 1): string
 {
     $status = $diff['status'];
     $key = $diff['key'] ?? null;
@@ -82,7 +82,7 @@ function formatStylish(array $diff, $depth = 1)
     }
 }
 
-function makeStylish($diff)
+function makeStylish(array $diff): string
 {
     $result = formatStylish($diff);
     return "{\n{$result}\n}";

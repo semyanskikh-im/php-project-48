@@ -4,13 +4,13 @@ namespace Differ\Formatters\Plain;
 
 use function Functional\flatten;
 
-function makePlain($diff)
+function makePlain(array $diff): string
 {
     $result = array_filter(flatten(formatPlain($diff)));
     return implode("\n", $result);
 }
 
-function formatPlain($diff, $acc = '')
+function formatPlain(array $diff, string $acc = '')
 {
     $status = $diff['status'];
     $key = $diff['key'] ?? null;
@@ -60,7 +60,7 @@ function formatPlain($diff, $acc = '')
 }
 
 
-function stringify($data)
+function stringify(mixed $data): string
 {
     if (is_string($data)) {
         return "'$data'";
