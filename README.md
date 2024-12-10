@@ -1,8 +1,33 @@
-### Hexlet tests and linter status:
+#DIFFERENCE GENERATOR 
+
 [![Actions Status](https://github.com/semyanskikh-im/php-project-48/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/semyanskikh-im/php-project-48/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c3c045251e58af933a67/maintainability)](https://codeclimate.com/github/semyanskikh-im/php-project-48/maintainability)
 [![hexlet-check](https://github.com/semyanskikh-im/php-project-48/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/semyanskikh-im/php-project-48/actions/workflows/hexlet-check.yml)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c3c045251e58af933a67/test_coverage)](https://codeclimate.com/github/semyanskikh-im/php-project-48/test_coverage)
+
+## About
+
+This is a console utility that generate the difference between two files, that have extensions of **.JSON** or **.YAML/.YML**.  
+There are three output formats: **stylish**, **plain** and **json**.  
+The default output format is **stylish**.
+
+
+## Prerequisites
+
++ Ubuntu, WSL
++ PHP >=8.3
++ Composer
++ Make
++ Git
+
+## Install
+
+```bash
+git clone git@github.com:semyanskikh-im/php-project-48.git
+cd php-project-48
+make install
+```
+
 
 ## Watch it in asciinema:
 [![asciicast](https://asciinema.org/a/EbTwhDjAnXnAZoYzo8uT3suA6.svg)](https://asciinema.org/a/EbTwhDjAnXnAZoYzo8uT3suA6)

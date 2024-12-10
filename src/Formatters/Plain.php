@@ -25,7 +25,7 @@ function formatPlain(array $diff, string $acc = '')
             );
 
         case 'have children':
-            $acc = ($acc === '') ? $key : $acc . "." . $key;
+            $acc = ($acc === '') ? $key : "{$acc}.{$key}";
             $diff['key'] = $acc;
             return array_map(
                 function ($child) use ($acc) {
@@ -36,7 +36,7 @@ function formatPlain(array $diff, string $acc = '')
 
 
         case 'added':
-            $diff['key'] = ($acc === '') ? $key : $acc . "." . $key;
+            $diff['key'] = ($acc === '') ? $key : "{$acc}.{$key}";
             $value = stringify($diff['value']);
             return "Property '{$diff['key']}' was added with value: {$value}";
 
@@ -44,12 +44,12 @@ function formatPlain(array $diff, string $acc = '')
             return;
 
         case 'removed':
-            $diff['key'] = ($acc === '') ? $key : $acc . "." . $key;
+            $diff['key'] = ($acc === '') ? $key : "{$acc}.{$key}";
             $value = stringify($diff['value']);
             return "Property '{$diff['key']}' was removed";
 
         case 'updated':
-            $diff['key'] = ($acc === '') ? $key : $acc . "." . $key;
+            $diff['key'] = ($acc === '') ? $key : "{$acc}.{$key}";
             $value1 = stringify($diff['value1']);
             $value2 = stringify($diff['value2']);
             return "Property '{$diff['key']}' was updated. From {$value1} to {$value2}";

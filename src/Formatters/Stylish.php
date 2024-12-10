@@ -25,13 +25,16 @@ function stringify(mixed $data, int $depth = 1): string
 
         $preview = array_map(
             function ($key) use ($data, $depth) {
-                return makeIndent($depth + 1) . "  " . $key . ": " . stringify($data[$key], $depth + 1);
+                $indent = makeIndent($depth + 1);
+                $value = stringify($data[$key], $depth + 1);
+                return "$indent  $key: $value";
             },
             $keys
         );
 
         $result = implode("\n", $preview);
-        return "{" . PHP_EOL . $result . PHP_EOL . makeIndent($depth) . "  }";
+        $closingIndent = makeIndent($depth);
+        return "{\n$result\n$closingIndent  }";
     }
 
     $failure = getType($data);
@@ -55,17 +58,20 @@ function formatStylish(array $diff, int $depth = 1): string
             return implode("\n", $result);
 
         case 'added':
-            return $indent . "+ " . $key . ": " . stringify($diff['value'], $depth);
-
+            $value = stringify($diff['value'], $depth);
+            return "$indent+ $key: $value";
         case 'removed':
-            return $indent . "- " . $key . ": " . stringify($diff['value'], $depth);
+            $value = stringify($diff['value'], $depth);
+            return "$indent- $key: $value";
 
         case 'unchanged':
-            return $indent . "  " . $key . ": " . stringify($diff['value'], $depth);
+            $value = stringify($diff['value'], $depth);
+            return "$indent  $key: $value";
 
         case 'updated':
-            return $indent . "- " . $key . ": " . stringify($diff['value1'], $depth) . PHP_EOL
-            . $indent . "+ " . $key . ": " . stringify($diff['value2'], $depth);
+            $value1 = stringify($diff['value1'], $depth);
+            $value2 = stringify($diff['value2'], $depth);
+            return "$indent- $key: $value1\n$indent+ $key: $value2";
 
         case 'have children':
             $result = array_map(
@@ -75,7 +81,7 @@ function formatStylish(array $diff, int $depth = 1): string
                 $diff['children']
             );
             $prefinal = implode("\n", $result);
-            return "$indent  $key: {\n{$prefinal}\n$indent  }";
+            return "$indent  $key: {\n$prefinal\n$indent  }";
 
         default:
             throw new \Exception('Unknown status');
@@ -85,5 +91,5 @@ function formatStylish(array $diff, int $depth = 1): string
 function makeStylish(array $diff): string
 {
     $result = formatStylish($diff);
-    return "{\n{$result}\n}";
+    return "{\n$result\n}";
 }
