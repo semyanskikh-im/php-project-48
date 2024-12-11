@@ -37,7 +37,7 @@ function stringify(mixed $data, int $depth = 1): string
         return "{\n$result\n$closingIndent  }";
     }
 
-    $failure = getType($data);
+    $failure = gettype($data);
     throw new \Exception(sprintf('Unknown format %s is given!', $failure));
 }
 
