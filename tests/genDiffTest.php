@@ -49,7 +49,7 @@ class GenDiffTest extends TestCase
         $filename2 = '/tests/fixtures/testFile2.json';
         $filename1 = '/tests/fixtures/testFile7.yml'; //этого файла не существует
         $format = 'stylish';
-        
+
         genDiff($filename1, $filename2, $format);
     }
 
@@ -61,7 +61,7 @@ class GenDiffTest extends TestCase
         $filename2 = '/tests/fixtures/testFile2.json';
         $filename1 = '/tests/fixtures/testFile3.txt'; //функция не работает с текстовым файлом
         $format = 'stylish';
-        
+
         genDiff($filename1, $filename2, $format);
     }
 }
