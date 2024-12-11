@@ -1,24 +1,17 @@
 <?php
 
-namespace Differ\Formatter;
+namespace Differ\Formatters;
 
-use Exception;
-use PhpParser\Node\Expr\Throw_;
-
-use function Differ\Formatters\Stylish\makeStylish;
-use function Differ\Formatters\Plain\makePlain;
-use function Differ\Formatters\Json\makeJson;
-
-function formatter(array $diff, string $format): string
+function format(array $diff, string $format): string
 {
     switch ($format) {
         case 'plain':
-            return makePlain($diff);
+            return Plain\perform($diff);
         case 'stylish':
-            return makeStylish($diff);
+            return Stylish\perform($diff);
         case 'json':
-            return makeJson($diff);
+            return Json\perform($diff);
         default:
-            throw new \Exception('Unknown format');
+            throw new \Exception("Unknown format '{$format}'.");
     }
 }

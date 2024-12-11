@@ -4,7 +4,7 @@ namespace Differ\Formatters\Plain;
 
 use function Functional\flatten;
 
-function makePlain(array $diff): string
+function perform(array $diff): string
 {
     $result = array_filter(flatten(formatPlain($diff)));
     return implode("\n", $result);
@@ -45,7 +45,6 @@ function formatPlain(array $diff, string $acc = '')
 
         case 'removed':
             $diff['key'] = ($acc === '') ? $key : "{$acc}.{$key}";
-            $value = stringify($diff['value']);
             return "Property '{$diff['key']}' was removed";
 
         case 'updated':

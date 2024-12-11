@@ -5,28 +5,17 @@ namespace Differ\Parsers;
 use Symfony\Component\Yaml\Yaml;
 
 /*
- * функция проверяет существует ли файл, не пустой ли он,
- * парсит содержиоме json или yaml файла и декодирует строку в массив
+ * функция парсит содержиоме json или yaml файла и декодирует строку в массив
  */
-function parse(string $path): array
+function parse(string $fileContent, string $fileExtension): array
 {
-    if (!file_exists($path)) {
-        throw new \Exception("Oops! No file {$path}!"); // если такого файла не существует - выводим сообщение
-    }
+    return match ($fileExtension) {
+        'json' => json_decode($fileContent, true),// декодируем из json в асс. массив
 
-    $fileContent = file_get_contents($path); // получаем содержимое файла по введенному пути
+        'yaml' => Yaml::parse($fileContent),// декодирум из yaml в асс. массив
 
-    if (empty($fileContent)) {
-        throw new \Exception("Oops! File {$path} is empty!"); // если файл пустой  - выводим сообщение
-    }
+        'yml' =>  Yaml::parse($fileContent), // декодирум из yaml в асс. массив
 
-    $fileExtension = pathinfo($path, PATHINFO_EXTENSION);//получаем инфу о расширении файла: json или yaml(yml)
-
-    if ($fileExtension === 'json') {
-        return json_decode($fileContent, true);// декодируем из json в асс. массив
-    }
-
-    if ($fileExtension === 'yaml' || $fileExtension === 'yml') {
-        return Yaml::parse($fileContent); // декодирум из yaml в асс. массив
-    }
+        default => throw new \Exception("This utility can't work with .{$fileExtension} extension.")
+    };
 }

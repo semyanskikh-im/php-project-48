@@ -88,7 +88,7 @@ function formatStylish(array $diff, int $depth = 1): string
     }
 }
 
-function makeStylish(array $diff): string
+function perform(array $diff): string
 {
     $result = formatStylish($diff);
     return "{\n$result\n}";
