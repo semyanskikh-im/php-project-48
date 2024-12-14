@@ -20,13 +20,13 @@ function stringify(mixed $data, int $depth = 1): string
         return $data ? 'true' : 'false';
     } elseif (is_null($data)) {
         return 'null';
-    } elseif (is_array($data)) {
-        $keys = array_keys($data);
+    } elseif (is_object($data)) {
+        $keys = array_keys(get_object_vars($data));
 
         $preview = array_map(
             function ($key) use ($data, $depth) {
                 $indent = makeIndent($depth + 1);
-                $value = stringify($data[$key], $depth + 1);
+                $value = stringify($data->$key, $depth + 1);
                 return "$indent  $key: $value";
             },
             $keys

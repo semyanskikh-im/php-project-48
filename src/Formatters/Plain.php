@@ -10,7 +10,7 @@ function perform(array $diff): string
     return implode("\n", $result);
 }
 
-function formatPlain(array $diff, string $acc = '')
+function formatPlain(array $diff, string $prefix = '')
 {
     $status = $diff['status'];
     $key = $diff['key'] ?? null;
@@ -25,18 +25,18 @@ function formatPlain(array $diff, string $acc = '')
             );
 
         case 'have children':
-            $acc = ($acc === '') ? $key : "{$acc}.{$key}";
-            $diff['key'] = $acc;
+            $prefix = ($prefix === '') ? $key : "{$prefix}.{$key}";
+            $diff['key'] = $prefix;
             return array_map(
-                function ($child) use ($acc) {
-                    return formatPlain($child, $acc);
+                function ($child) use ($prefix) {
+                    return formatPlain($child, $prefix);
                 },
                 $diff['children']
             );
 
 
         case 'added':
-            $diff['key'] = ($acc === '') ? $key : "{$acc}.{$key}";
+            $diff['key'] = ($prefix === '') ? $key : "{$prefix}.{$key}";
             $value = stringify($diff['value']);
             return "Property '{$diff['key']}' was added with value: {$value}";
 
@@ -44,11 +44,11 @@ function formatPlain(array $diff, string $acc = '')
             return;
 
         case 'removed':
-            $diff['key'] = ($acc === '') ? $key : "{$acc}.{$key}";
+            $diff['key'] = ($prefix === '') ? $key : "{$prefix}.{$key}";
             return "Property '{$diff['key']}' was removed";
 
         case 'updated':
-            $diff['key'] = ($acc === '') ? $key : "{$acc}.{$key}";
+            $diff['key'] = ($prefix === '') ? $key : "{$prefix}.{$key}";
             $value1 = stringify($diff['value1']);
             $value2 = stringify($diff['value2']);
             return "Property '{$diff['key']}' was updated. From {$value1} to {$value2}";
@@ -69,10 +69,10 @@ function stringify(mixed $data): string
         return $data ? 'true' : 'false';
     } elseif (is_null($data)) {
         return 'null';
-    } elseif (is_array($data)) {
+    } elseif (is_object($data)) {
         return '[complex value]';
     }
 
-    $failure = getType($data);
+    $failure = gettype($data);
     throw new \Exception(sprintf('Unknown format %s is given!', $failure));
 }

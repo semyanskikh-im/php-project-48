@@ -31,10 +31,10 @@ function getFileContent(string $path): string
 }
 
 
-function differ(array $array1, array $array2): array
+function differ(object $array1, object $array2): array
 {
-    //получаем все ключи 2 массивов на одной глубине
-    $keys = array_unique(array_merge(array_keys($array1), array_keys($array2)));
+    //получаем все ключи 2 массивов(объектов) на одной глубине
+    $keys = array_unique(array_merge(array_keys(get_object_vars($array1)), array_keys(get_object_vars($array2))));
 
     //сортируем ключи по алфавиту
     $sortedKeys = sort(
@@ -45,10 +45,11 @@ function differ(array $array1, array $array2): array
     );
 
     $result = array_map(function ($key) use ($array1, $array2) {
-        $value1 = $array1[$key] ?? null;
-        $value2 = $array2[$key] ?? null;
+        $value1 = $array1->$key ?? null;
+        $value2 = $array2->$key ?? null;
+
         //если ключ есть только в первом массиве
-        if (array_key_exists($key, $array1) && (!array_key_exists($key, $array2))) {
+        if (property_exists($array1, $key) && (!property_exists($array2, $key))) {
             return [
                 'status' => 'removed',
                 'key' => $key,
@@ -56,7 +57,7 @@ function differ(array $array1, array $array2): array
             ];
         }
         //если ключ есть только во втором массиве
-        if (!array_key_exists($key, $array1) && (array_key_exists($key, $array2))) {
+        if (!property_exists($array1, $key) && (property_exists($array2, $key))) {
             return [
                 'status' => 'added',
                 'key' => $key,
@@ -75,40 +76,28 @@ function differ(array $array1, array $array2): array
         }
 
         //2. значения разные:
-        //2.1 если одно или второе значение не является массивом, то просто записываем разность
-        if ((!is_array($value1)) || (!is_array($value2))) {
+        //2.1 если оба значенияя ассоциативные массивы...
+        if (is_object($value1) && is_object($value2)) {
             return [
-                'status' => 'updated',
+                'status' => 'have children',
                 'key' => $key,
-                'value1' => $value1,
-                'value2' => $value2
-            ];
+                'children' => differ($value1, $value2)
+                ];
         }
 
-        //2.2 если оба значенияя массивы...
-        if (is_array($value1) && is_array($value2)) {
-            //2.2.1... и оба ассоциативные, проверяем детей на уровень ниже
-            if (!array_is_list($value1) && !array_is_list($value2)) {
-                return [
-                    'status' => 'have children',
-                    'key' => $key,
-                    'children' => differ($value1, $value2)
-                ];
-            } else { //2.2.2 в противном случае, возвращаем как есть
-                return [
-                    'status' => 'updated',
-                    'key' => $key,
-                    'value1' => $value1,
-                    'value2' => $value2
-                ];
-            }
-        }
+        //2.2.2 в противном случае, возвращаем как есть
+        return [
+            'status' => 'updated',
+            'key' => $key,
+            'value1' => $value1,
+            'value2' => $value2
+            ];
     }, $sortedKeys);
 
     return $result;
 }
 
-function makeDiff(array $array1, array $array2): array
+function makeDiff(object $array1, object $array2): array
 {
     return [
         'status' => 'root',
