@@ -10,10 +10,10 @@ use function Differ\Differ\genDiff;
 class DifferTest extends TestCase
 {
     #[DataProvider('additionProvider')]
-    public function testGenDiff($a, $b, $format, $expected)
+    public function testGenDiff($filename1, $filename2, $format, $expected)
     {
-        $file1 = $this->getFixturePath($a);
-        $file2 = $this->getFixturePath($b);
+        $file1 = $this->getFixturePath($filename1);
+        $file2 = $this->getFixturePath($filename2);
         $expectedFile = file_get_contents($this->getFixturePath($expected));
 
         $this->assertEquals($expectedFile, genDiff($file1, $file2, $format));
@@ -50,11 +50,11 @@ class DifferTest extends TestCase
     {
         $this->expectException(\Exception::class);
 
-        $filename2 = '/tests/fixtures/testFile2.json';
-        $filename1 = '/tests/fixtures/testFile7.yml'; //этого файла не существует
+        $filename2 = 'testFile2.json';
+        $filename1 = 'testFile7.yml'; //этого файла не существует
         $format = 'stylish';
 
-        genDiff($filename1, $filename2, $format);
+        genDiff($this->getFixturePath($filename1), $this->getFixturePath($filename2), $format);
     }
 
     //тест на неподходящее расширение
