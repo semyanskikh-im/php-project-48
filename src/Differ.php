@@ -76,7 +76,7 @@ function differ(object $array1, object $array2): array
         }
 
         //2. значения разные:
-        //2.1 если оба значенияя ассоциативные массивы...
+        //2.1 если оба значенияя ассоциативные массивы, проваливаемся на уровень ниже
         if (is_object($value1) && is_object($value2)) {
             return [
                 'status' => 'have children',

@@ -5,7 +5,7 @@
     "autoload": {
         "files": [
             "src/Differ.php",
-            "src/Formatter.php",
+            "src/Formatters.php",
             "src/Formatters/Stylish.php",
             "src/Formatters/Plain.php",
             "src/Formatters/Json.php",

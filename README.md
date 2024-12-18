@@ -7,10 +7,9 @@
 
 ## About
 
-This is a console utility that generate the difference between two files, that have extensions of **.JSON** or **.YAML/.YML**.  
+This is a console utility that generates the difference between two files having extensions of **.JSON** or **.YAML/.YML**.  
 There are three output formats: **stylish**, **plain** and **json**.  
 The default output format is **stylish**.
-
 
 ## Prerequisites
 

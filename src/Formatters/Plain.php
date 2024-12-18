@@ -25,36 +25,35 @@ function formatPlain(array $diff, string $prefix = '')
             );
 
         case 'have children':
-            $prefix = ($prefix === '') ? $key : "{$prefix}.{$key}";
-            $diff['key'] = $prefix;
+            $fullPath = ($prefix === '') ? $key : "{$prefix}.{$key}";
             return array_map(
-                function ($child) use ($prefix) {
-                    return formatPlain($child, $prefix);
+                function ($child) use ($fullPath) {
+                    return formatPlain($child, $fullPath);
                 },
                 $diff['children']
             );
 
 
         case 'added':
-            $diff['key'] = ($prefix === '') ? $key : "{$prefix}.{$key}";
+            $fullPath = ($prefix === '') ? $key : "{$prefix}.{$key}";
             $value = stringify($diff['value']);
-            return "Property '{$diff['key']}' was added with value: {$value}";
+            return "Property '{$fullPath}' was added with value: {$value}";
 
         case 'unchanged':
             return;
 
         case 'removed':
-            $diff['key'] = ($prefix === '') ? $key : "{$prefix}.{$key}";
-            return "Property '{$diff['key']}' was removed";
+            $fullPath = ($prefix === '') ? $key : "{$prefix}.{$key}";
+            return "Property '{$fullPath}' was removed";
 
         case 'updated':
-            $diff['key'] = ($prefix === '') ? $key : "{$prefix}.{$key}";
+            $fullPath = ($prefix === '') ? $key : "{$prefix}.{$key}";
             $value1 = stringify($diff['value1']);
             $value2 = stringify($diff['value2']);
-            return "Property '{$diff['key']}' was updated. From {$value1} to {$value2}";
+            return "Property '{$fullPath}' was updated. From {$value1} to {$value2}";
 
         default:
-            throw new \Exception('Unknown status');
+            throw new \Exception("Unknown status '{$status}'");
     }
 }
 

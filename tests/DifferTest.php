@@ -7,26 +7,30 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 use function Differ\Differ\genDiff;
 
-class GenDiffTest extends TestCase
+class DifferTest extends TestCase
 {
     #[DataProvider('additionProvider')]
     public function testGenDiff($a, $b, $format, $expected)
     {
-        $this->assertEquals($expected, genDiff($a, $b, $format));
+        $file1 = $this->getFixturePath($a);
+        $file2 = $this->getFixturePath($b);
+        $expectedFile = file_get_contents($this->getFixturePath($expected));
+
+        $this->assertEquals($expectedFile, genDiff($file1, $file2, $format));
     }
 
     public static function additionProvider(): array
     {
-        $filename1 = 'tests/fixtures/testFile1.json';
-        $filename2 = 'tests/fixtures/testFile2.json';
-        $filename4 = 'tests/fixtures/testFile1.yml';
-        $filename5 = 'tests/fixtures/testFile2.yaml';
+        $filename1 = 'testFile1.json';
+        $filename2 = 'testFile2.json';
+        $filename4 = 'testFile1.yml';
+        $filename5 = 'testFile2.yaml';
         $formatStylish = 'stylish';
         $formatPlain = 'plain';
         $formatJson = 'json';
-        $expectedStylish = file_get_contents('tests/fixtures/stylishExpected.txt');
-        $expectedPlain = file_get_contents('tests/fixtures/plainExpected.txt');
-        $expectedJson = file_get_contents('tests/fixtures/jsonExpected.txt');
+        $expectedStylish = 'stylishExpected.txt';
+        $expectedPlain = 'plainExpected.txt';
+        $expectedJson = 'jsonExpected.txt';
 
         return [
             'json to json. Format Stylish' => [$filename1, $filename2, $formatStylish, $expectedStylish],
@@ -58,10 +62,16 @@ class GenDiffTest extends TestCase
     {
         $this->expectException(\Exception::class);
 
-        $filename2 = '/tests/fixtures/testFile2.json';
-        $filename1 = '/tests/fixtures/testFile3.txt'; //функция не работает с текстовым файлом
+        $filename2 = 'testFile2.json';
+        $filename1 = 'testFile3.txt'; //функция не работает с текстовым файлом
         $format = 'stylish';
 
-        genDiff($filename1, $filename2, $format);
+        genDiff($this->getFixturePath($filename1), $this->getFixturePath($filename2), $format);
+    }
+
+    //функция достраивает полный путь до фикстуры
+    public function getFixturePath(string $filename): string
+    {
+        return __DIR__ . "/fixtures/{$filename}";
     }
 }
